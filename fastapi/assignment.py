@@ -73,9 +73,12 @@ async def read_all_books(books_to_return: Optional[int] = None):
         return new_books
     return BOOKS
 
-@app.post('/books/login')
-async def book_login(username: str = Form(), password: str = Form()):
-    return {'username': username, 'password': password}
+# login 뒤에 / 붙여서 query parameter 불러옴
+@app.post('/books/login/')
+async def book_login(book_id: int, username: Optional[str] = Header(None), password: Optional[str] = Header(None)):
+    if username == 'FastAPIUser' and password == 'test1234!':
+        return BOOKS[book_id]
+    return 'Invalid User'
 
 @app.get('/header')
 async def read_header(random_header: Optional[str] = Header(None)):
@@ -162,5 +165,6 @@ def raise_item_cannot_be_found_exception():
                          detail='Book not found',
                          headers={'X-Header-Error':
                                   'Nothing to be seen at the UUID'})
+
 
 
